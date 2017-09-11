@@ -1,4 +1,4 @@
-public class Lab1 {
+public class Quadratic {
 
     public static void main(String[] args) {
         if (args.length == 0) {

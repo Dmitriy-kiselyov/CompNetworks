@@ -22,7 +22,7 @@ public class FindNumberClient {
         PrintWriter out = new PrintWriter(client.getOutputStream(), true);
         BufferedReader userInput = new BufferedReader(new InputStreamReader(System.in));
 
-        System.out.println("Waiting for input...");
+        System.out.print("Send to server: ");
 
         String input;
         while ((input = userInput.readLine()) != null) {
@@ -32,6 +32,8 @@ public class FindNumberClient {
 
             String answer = in.readLine();
             System.out.println("Answer: " + answer);
+
+            System.out.print("Send to server: ");
         }
 
         out.close();

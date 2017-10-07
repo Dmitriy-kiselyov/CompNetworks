@@ -1,72 +1,60 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 
 public class FindNumberServer {
 
     public static void main(String[] args) throws IOException {
-        System.out.println("Welcome to Server side");
+        System.out.println("Welcome to server side");
 
-        ServerSocket server = null;
-        Socket client = null;
+        ServerSocket servers = null;
 
         // create server socket
         try {
-            server = new ServerSocket(4444);
+            servers = new ServerSocket(4444);
         } catch (IOException e) {
             System.out.println("Couldn't listen to port 4444");
             System.exit(-1);
         }
 
-        try {
-            System.out.print("Waiting for a client...");
-            client = server.accept();
-            System.out.println("Client connected");
-        } catch (IOException e) {
-            System.out.println("Can't accept");
-            System.exit(-1);
-        }
+        System.out.println("Server created! Type: 'exit' to close server");
 
-        BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
-        PrintWriter out = new PrintWriter(client.getOutputStream(), true);
-
-        System.out.println("Waiting for messages...");
-
-        String input;
-        while ((input = in.readLine()) != null) {
-            if (input.equalsIgnoreCase("exit")) break;
-
-            System.out.println("Received: " + input);
+        //close server on "exit" command
+        final ServerSocket finalServers = servers;
+        new Thread(() -> {
+            BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+            String input;
 
             try {
-                String[] nums = input.split("\\s+");
-                int a = Integer.parseInt(nums[0]);
-                int b = Integer.parseInt(nums[1]);
-
-                int cnt = FindNumber.findInRange(a, b, false);
-
-                System.out.println("Answer is " + cnt);
-                out.println(cnt);
-            } catch (NumberFormatException e) {
-                String message = "Error! Arguments should be integer!";
-                System.out.println(message);
-                out.println(message);
-            } catch (IndexOutOfBoundsException e) {
-                String message = "Error! There should be 2 arguments!";
-                System.out.println(message);
-                out.println(message);
+                while ((input = in.readLine()) != null) {
+                    if (input.equalsIgnoreCase("exit")) break;
+                }
+            } catch (IOException e) {
+                System.out.println("Could not read server command");
+            } finally {
+                try {
+                    finalServers.close();
+                } catch (IOException e) {
+                    System.out.println("Could not close server safely");
+                }
             }
+        }).start();
 
-
+        //wait for client forever
+        while (true) {
+            try {
+                System.out.println("Waiting for a new client...");
+                Socket client = servers.accept();
+                FindNumberWorker clientWorker = new FindNumberWorker(client);
+                System.out.println("New client " + clientWorker.clientName() + " connected");
+                new Thread(clientWorker).start();
+            } catch (IOException e) {
+                System.out.println("Server closed");
+                System.exit(0);
+            }
         }
-
-        out.close();
-        in.close();
-        client.close();
-        server.close();
     }
 
 }

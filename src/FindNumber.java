@@ -60,11 +60,14 @@ public class FindNumber {
         return time;
     }
 
-    private static int findInRange(int a, int b, boolean print) {
+    public static int findInRange(int a, int b, boolean print) {
         int cnt = 0;
 
-        for (int i = a; i <= b; i++) {
-            if (i % 11 == 0 && i % 13 == 0 && i % 15 == 0) {
+        int from = Math.min(a, b);
+        int to = Math.max(a, b);
+
+        for (int i = from; i <= to; i++) {
+            if (i % 11 == 0 && i % 13 == 0 && i % 17 == 0) {
                 cnt++;
                 if (print)
                     System.out.println(i);

@@ -25,15 +25,19 @@ public class FindNumberClient {
         System.out.print("Send to server: ");
 
         String input;
-        while ((input = userInput.readLine()) != null) {
-            out.println(input);
+        try {
+            while ((input = userInput.readLine()) != null) {
+                out.println(input);
 
-            if (input.equalsIgnoreCase("exit")) break;
+                if (input.equalsIgnoreCase("exit")) break;
 
-            String answer = in.readLine();
-            System.out.println("Answer: " + answer);
+                String answer = in.readLine();
+                System.out.println("Answer: " + answer);
 
-            System.out.print("Send to server: ");
+                System.out.print("Send to server: ");
+            }
+        } catch (IOException e) {
+            System.out.println("Connection lost");
         }
 
         out.close();

@@ -54,6 +54,8 @@ public class FindNumberWorker implements Runnable {
             }
         } catch (Exception e) {
             System.out.println("Could not read next line from " + clientName());
+        } finally {
+            System.out.println("Client " + clientName() + " disconnected");
         }
 
         try {

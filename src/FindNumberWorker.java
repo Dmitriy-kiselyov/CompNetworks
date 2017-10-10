@@ -5,10 +5,17 @@ import java.io.PrintWriter;
 import java.net.Socket;
 
 public class FindNumberWorker implements Runnable {
+    private static final long INTERVAL = 999_999;
+    private static long start = 1;
+
     private final Socket client;
+    private final long a, b;
 
     public FindNumberWorker(Socket client) {
         this.client = client;
+        a = start;
+        b = a + INTERVAL;
+        start += INTERVAL + 1;
     }
 
     @Override
@@ -24,40 +31,22 @@ public class FindNumberWorker implements Runnable {
             return;
         }
 
-        System.out.println("Waiting for messages from " + clientName());
+        //send arguments to client
+        out.println(a + " " + b);
 
-        String input;
+        //receive answer
         try {
-            while ((input = in.readLine()) != null) {
-                if (input.equalsIgnoreCase("exit")) break;
-
-                System.out.println("Received from " + clientName() + ": " + input);
-
-                try {
-                    String[] nums = input.split("\\s+");
-                    int a = Integer.parseInt(nums[0]);
-                    int b = Integer.parseInt(nums[1]);
-
-                    int cnt = FindNumber.findInRange(a, b, false);
-
-                    System.out.println("Answer is " + cnt);
-                    out.println(cnt);
-                } catch (NumberFormatException e) {
-                    String message = "Error! Arguments should be integer!";
-                    System.out.println(message);
-                    out.println(message);
-                } catch (IndexOutOfBoundsException e) {
-                    String message = "Error! There should be 2 arguments!";
-                    System.out.println(message);
-                    out.println(message);
-                }
+            String answer;
+            while ((answer = in.readLine()) != null) {
+                System.out.println("Client " + clientName() + " send answer:");
+                System.out.println("[" + a + ", " + b + "] = " + answer);
+                break;
             }
-        } catch (Exception e) {
-            System.out.println("Could not read next line from " + clientName());
-        } finally {
+        } catch (IOException e) {
             System.out.println("Client " + clientName() + " disconnected");
         }
 
+        //close client
         try {
             out.close();
             in.close();

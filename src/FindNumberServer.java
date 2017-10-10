@@ -9,20 +9,21 @@ public class FindNumberServer {
     public static void main(String[] args) throws IOException {
         System.out.println("Welcome to server side");
 
-        ServerSocket servers = null;
+        ServerSocket server = null;
 
         // create server socket
         try {
-            servers = new ServerSocket(4444);
+            server = new ServerSocket(4444);
         } catch (IOException e) {
             System.out.println("Couldn't listen to port 4444");
             System.exit(-1);
         }
 
-        System.out.println("Server created! Type: 'exit' to close server");
+        System.out.println("Server " + server.getInetAddress().getHostAddress() + " created!");
+        System.out.println("Type: 'exit' to close server");
 
         //close server on "exit" command
-        final ServerSocket finalServers = servers;
+        final ServerSocket finalServers = server;
         new Thread(() -> {
             BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
             String input;
@@ -41,12 +42,12 @@ public class FindNumberServer {
                 }
             }
         }).start();
-
+        
         //wait for client forever
         while (true) {
             try {
                 System.out.println("Waiting for a new client...");
-                Socket client = servers.accept();
+                Socket client = server.accept();
                 FindNumberWorker clientWorker = new FindNumberWorker(client);
                 System.out.println("New client " + clientWorker.clientName() + " connected");
                 new Thread(clientWorker).start();

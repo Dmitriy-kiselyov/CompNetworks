@@ -20,29 +20,40 @@ public class FindNumberClient {
         Socket client = new Socket(args[0], 4444);
         BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
         PrintWriter out = new PrintWriter(client.getOutputStream(), true);
-        BufferedReader userInput = new BufferedReader(new InputStreamReader(System.in));
 
-        System.out.print("Send to server: ");
-
-        String input;
+        //waiting for arguments
         try {
-            while ((input = userInput.readLine()) != null) {
-                out.println(input);
+            String input;
+            while ((input = in.readLine()) != null) {
+                try {
+                    System.out.println("Received from server: /" + input + "/");
 
-                if (input.equalsIgnoreCase("exit")) break;
+                    String[] nums = input.split("\\s+");
+                    long a = Long.parseLong(nums[0]);
+                    long b = Long.parseLong(nums[1]);
 
-                String answer = in.readLine();
-                System.out.println("Answer: " + answer);
+                    int cnt = FindNumber.findInRange(a, b, false);
 
-                System.out.print("Send to server: ");
+                    System.out.println("Answer is " + cnt);
+                    out.println(cnt);
+                } catch (NumberFormatException e) {
+                    String message = "Error! Arguments should be integer!";
+                    System.out.println(message);
+                    out.println(message);
+                } catch (IndexOutOfBoundsException e) {
+                    String message = "Error! There should be 2 arguments!";
+                    System.out.println(message);
+                    out.println(message);
+                }
+
+                break;
             }
-        } catch (IOException e) {
-            System.out.println("Connection lost");
+        } catch (Exception e) {
+            System.out.println("Problem with transferring data!");
         }
 
         out.close();
         in.close();
-        userInput.close();
         client.close();
     }
 

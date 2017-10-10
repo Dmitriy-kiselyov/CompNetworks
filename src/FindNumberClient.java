@@ -23,30 +23,26 @@ public class FindNumberClient {
 
         //waiting for arguments
         try {
-            String input;
-            while ((input = in.readLine()) != null) {
-                try {
-                    System.out.println("Received from server: /" + input + "/");
+            String input = in.readLine();
+            try {
+                System.out.println("Received from server: /" + input + "/");
 
-                    String[] nums = input.split("\\s+");
-                    long a = Long.parseLong(nums[0]);
-                    long b = Long.parseLong(nums[1]);
+                String[] nums = input.split("\\s+");
+                long a = Long.parseLong(nums[0]);
+                long b = Long.parseLong(nums[1]);
 
-                    int cnt = FindNumber.findInRange(a, b, false);
+                int cnt = FindNumber.findInRange(a, b, false);
 
-                    System.out.println("Answer is " + cnt);
-                    out.println(cnt);
-                } catch (NumberFormatException e) {
-                    String message = "Error! Arguments should be integer!";
-                    System.out.println(message);
-                    out.println(message);
-                } catch (IndexOutOfBoundsException e) {
-                    String message = "Error! There should be 2 arguments!";
-                    System.out.println(message);
-                    out.println(message);
-                }
-
-                break;
+                System.out.println("Answer is " + cnt);
+                out.println(cnt);
+            } catch (NumberFormatException e) {
+                String message = "Error! Arguments should be integer!";
+                System.out.println(message);
+                out.println(message);
+            } catch (IndexOutOfBoundsException e) {
+                String message = "Error! There should be 2 arguments!";
+                System.out.println(message);
+                out.println(message);
             }
         } catch (Exception e) {
             System.out.println("Problem with transferring data!");

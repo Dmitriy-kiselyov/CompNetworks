@@ -36,12 +36,9 @@ public class FindNumberWorker implements Runnable {
 
         //receive answer
         try {
-            String answer;
-            while ((answer = in.readLine()) != null) {
-                System.out.println("Client " + clientName() + " send answer:");
-                System.out.println("[" + a + ", " + b + "] = " + answer);
-                break;
-            }
+            String answer = in.readLine();
+            System.out.println("Client " + clientName() + " send answer:");
+            System.out.println("[" + a + ", " + b + "] = " + answer);
         } catch (IOException e) {
             System.out.println("Client " + clientName() + " disconnected");
         }

@@ -42,13 +42,21 @@ public class FindNumberServer {
                 }
             }
         }).start();
-        
+
+        //get interval
+        long interval;
+        try {
+            interval = Long.parseLong(args[0]);
+        } catch (Exception e) {
+            interval = 999_999;
+        }
+
         //wait for client forever
         while (true) {
             try {
                 System.out.println("Waiting for a new client...");
                 Socket client = server.accept();
-                FindNumberWorker clientWorker = new FindNumberWorker(client);
+                FindNumberWorker clientWorker = new FindNumberWorker(client, interval);
                 System.out.println("New client " + clientWorker.clientName() + " connected");
                 new Thread(clientWorker).start();
             } catch (IOException e) {

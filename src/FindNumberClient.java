@@ -16,8 +16,9 @@ public class FindNumberClient {
         }
 
         System.out.println("Connecting to " + args[0]);
-
         Socket client = new Socket(args[0], 4444);
+        System.out.println("Client address is " + client.getLocalSocketAddress());
+
         BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
         PrintWriter out = new PrintWriter(client.getOutputStream(), true);
 

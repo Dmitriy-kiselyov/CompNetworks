@@ -5,17 +5,16 @@ import java.io.PrintWriter;
 import java.net.Socket;
 
 public class FindNumberWorker implements Runnable {
-    private static final long INTERVAL = 999_999;
     private static long start = 1;
 
     private final Socket client;
     private final long a, b;
 
-    public FindNumberWorker(Socket client) {
+    public FindNumberWorker(Socket client, long interval) {
         this.client = client;
         a = start;
-        b = a + INTERVAL;
-        start += INTERVAL + 1;
+        b = a + interval;
+        start += interval + 1;
     }
 
     @Override
